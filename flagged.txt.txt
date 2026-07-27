@@ -1,9 +1,3 @@
-[
- {
-   "username":"ttkhoider",
-   "userid":"7311822640",
-   "reason":"Robux scam",
-   "reports":24,
-   "date":"2026-07-27"
- }
-]
+builderman,suspicious activity
+shedletsky,ban evasion
+1x1x1x1,exploiting
