@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Roblox profile · flag list</title>
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+    }
+
+    body {
+      background: #0b0e14;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem 1rem;
+    }
+
+    /* main card – mimics the image style */
+    .profile-card {
+      background: #1a1f2b;
+      max-width: 420px;
+      width: 100%;
+      border-radius: 28px;
+      padding: 1.8rem 1.8rem 2rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+      border: 1px solid #2f3748;
+      transition: 0.2s;
+      color: #eef2f8;
+    }
+
+    /* header with "xecret" and timestamp */
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+      color: #9aa4b8;
+      border-bottom: 1px solid #2a3142;
+      padding-bottom: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .xecret-badge {
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      color: #d0d9e8;
+    }
+
+    .xecret-badge i {
+      color: #6c7a9a;
+      margin-right: 6px;
+    }
+
+    .time-tag {
+      background: #252d3d;
+      padding: 0.25rem 0.75rem;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      color: #b6c2d9;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .time-tag i {
+      font-size: 0.7rem;
+      color: #6c8cff;
+    }
+
+    /* avatar + main info */
+    .profile-main {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .avatar-wrapper {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: #232b3b;
+      border: 2px solid #364153;
+      overflow: hidden;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+
+    .avatar-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .avatar-placeholder {
+      color: #5f6d86;
+      font-size: 2.4rem;
+    }
+
+    .name-section {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .display-name {
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .display-name span {
+      background: #2f3a50;
+      padding: 0.1rem 0.6rem;
+      border-radius: 30px;
+      font-size: 0.7rem;
+      font-weight: 400;
+      color: #b8c7e5;
+      letter-spacing: 0.2px;
+    }
+
+    .username-line {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 4px;
+      font-size: 0.95rem;
+      color: #b0bedb;
+    }
+
+    .username-line i {
+      color: #6f7fa0;
+      font-size: 0.9rem;
+    }
+
+    .verified-badge {
+      background: #2b87ff;
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.15rem 0.7rem;
+      border-radius: 30px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      letter-spacing: 0.2px;
+      margin-left: 6px;
+    }
+
+    .verified-badge i {
+      font-size: 0.6rem;
+      color: white;
+    }
+
+    .unverified-badge {
+      background: #3d455b;
+      color: #bcc6de;
+      font-size: 0.7rem;
+      font-weight: 500;
+      padding: 0.15rem 0.7rem;
+      border-radius: 30px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      letter-spacing: 0.2px;
+      margin-left: 6px;
+    }
+
+    /* extra row – like "checked 5h ago" */
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: #7d8aa8;
+      padding: 0.5rem 0 0.2rem;
+      border-top: 1px solid #282f40;
+      margin-top: 0.25rem;
+    }
+
+    .meta-row i {
+      margin-right: 4px;
+      color: #5f71a0;
+    }
+
+    .flag-note {
+      background: #1e2637;
+      padding: 0.6rem 1rem;
+      border-radius: 40px;
+      margin-top: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-left: 3px solid #4c7aff;
+      color: #c8d4f0;
+      font-size: 0.9rem;
+    }
+
+    .flag-note i {
+      color: #4c7aff;
+    }
+
+    .flag-note strong {
+      font-weight: 500;
+      color: #d6e2ff;
+    }
+
+    /* tiny status */
+    .status-chip {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: #1f293d;
+      padding: 0.2rem 1rem 0.2rem 0.8rem;
+      border-radius: 40px;
+      font-size: 0.7rem;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #3bc46e;
+      display: inline-block;
+    }
+
+    /* responsive */
+    @media (max-width: 450px) {
+      .profile-card {
+        padding: 1.2rem;
+      }
+      .display-name {
+        font-size: 1.2rem;
+      }
+      .avatar-wrapper {
+        width: 64px;
+        height: 64px;
+      }
+    }
+
+    /* loading shimmer */
+    .loading {
+      opacity: 0.6;
+      filter: grayscale(0.3);
+      transition: 0.2s;
+    }
+
+    .btn-refresh {
+      background: transparent;
+      border: none;
+      color: #7a8bb0;
+      cursor: pointer;
+      font-size: 0.8rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 30px;
+      transition: 0.15s;
+    }
+
+    .btn-refresh:hover {
+      background: #2d364b;
+      color: #d0defc;
+    }
+
+    /* footer */
+    .footer-note {
+      text-align: center;
+      font-size: 0.65rem;
+      color: #45506b;
+      margin-top: 1.8rem;
+      letter-spacing: 0.3px;
+      border-top: 1px solid #232b3d;
+      padding-top: 1.2rem;
+    }
+
+    .footer-note i {
+      margin: 0 4px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="profile-card" id="profileCard">
+  <!-- header -->
+  <div class="card-header">
+    <span class="xecret-badge"><i class="fas fa-shield-alt"></i> xecret</span>
+    <span class="time-tag"><i class="far fa-clock"></i> added 5h ago · checked 5h ago</span>
+  </div>
+
+  <!-- main profile -->
+  <div class="profile-main">
+    <div class="avatar-wrapper" id="avatarWrapper">
+      <!-- avatar will be injected here -->
+      <img id="avatarImg" src="" alt="avatar" style="display: none;" />
+      <i class="fas fa-user-circle avatar-placeholder" id="avatarPlaceholder"></i>
+    </div>
+    <div class="name-section">
+      <div class="display-name">
+        <span id="displayName">—</span>
+        <span id="robloxBadge" style="background: #2f3a50;">RBLX</span>
+      </div>
+      <div class="username-line">
+        <i class="fas fa-user"></i>
+        <span id="usernameText">@loading...</span>
+        <span id="verifiedBadge" class="verified-badge" style="display: none;"><i class="fas fa-check-circle"></i> verified</span>
+        <span id="unverifiedBadge" class="unverified-badge" style="display: none;"><i class="fas fa-times-circle"></i> unverified</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- meta row : "checked 5h ago" style -->
+  <div class="meta-row">
+    <span><i class="far fa-eye"></i> profile fetched</span>
+    <span><i class="far fa-check-circle"></i> <span id="statusText">active</span></span>
+  </div>
+
+  <!-- flag note (custom reason) -->
+  <div class="flag-note">
+    <i class="fas fa-flag"></i>
+    <span><strong>flagged</strong> · reason: <span id="flagReason">under review</span></span>
+  </div>
+
+  <!-- mini status + refresh (demo) -->
+  <div style="display: flex; justify-content: flex-end; margin-top: 12px; gap: 8px;">
+    <div class="status-chip">
+      <span class="status-dot"></span> <span id="liveStatus">online</span>
+    </div>
+    <button class="btn-refresh" id="refreshBtn"><i class="fas fa-sync-alt"></i> refresh</button>
+  </div>
+
+  <div class="footer-note">
+    <i class="fas fa-database"></i> data from Roblox API · <i class="fas fa-code-branch"></i> github flagged.txt
+  </div>
+</div>
+
+<script>
+  (function() {
+    // ----- configuration -----
+    // You can change this username to any Roblox user.
+    // For demo, we use a well-known account "builderman" (Roblox founder)
+    const ROBLOX_USERNAME = 'builderman';   // change to any username
+
+    // flag reason – you can edit this or fetch from a flagged.txt later
+    const FLAG_REASON = 'suspicious activity · reported 3x';
+
+    // DOM elements
+    const avatarImg = document.getElementById('avatarImg');
+    const avatarPlaceholder = document.getElementById('avatarPlaceholder');
+    const displayNameSpan = document.getElementById('displayName');
+    const usernameText = document.getElementById('usernameText');
+    const verifiedBadge = document.getElementById('verifiedBadge');
+    const unverifiedBadge = document.getElementById('unverifiedBadge');
+    const flagReasonSpan = document.getElementById('flagReason');
+    const statusText = document.getElementById('statusText');
+    const liveStatus = document.getElementById('liveStatus');
+
+    // helper: fetch Roblox user data by username
+    async function fetchRobloxUser(username) {
+      try {
+        // 1. get user id from username
+        const userRes = await fetch(`https://api.roblox.com/users/get-by-username?username=${encodeURIComponent(username)}`);
+        if (!userRes.ok) {
+          throw new Error(`User not found (${userRes.status})`);
+        }
+        const userData = await userRes.json();
+        if (!userData || !userData.Id) {
+          throw new Error('Invalid user data');
+        }
+
+        const userId = userData.Id;
+
+        // 2. fetch more details: display name, verified status (from v1/users)
+        // we also get the username from this endpoint
+        const profileRes = await fetch(`https://users.roblox.com/v1/users/${userId}`);
+        if (!profileRes.ok) {
+          throw new Error(`Profile fetch failed (${profileRes.status})`);
+        }
+        const profileData = await profileRes.json();
+
+        // 3. fetch avatar headshot (using thumbnails API)
+        // we request 420x420 thumbnail (headshot)
+        const thumbRes = await fetch(
+          `https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userId}&size=420x420&format=Png&isCircular=false`
+        );
+        if (!thumbRes.ok) {
+          throw new Error(`Thumbnail fetch failed (${thumbRes.status})`);
+        }
+        const thumbData = await thumbRes.json();
+
+        let avatarUrl = null;
+        if (thumbData.data && thumbData.data.length > 0 && thumbData.data[0].imageUrl) {
+          avatarUrl = thumbData.data[0].imageUrl;
+        }
+
+        // 4. (optional) verified status from Roblox: we can check if user has "verified" badge
+        // Roblox API doesn't expose a simple "verified" boolean for all users.
+        // We'll use a heuristic: check if the user has the "Verified" badge (isVerified)
+        // We can fetch badges: https://badges.roblox.com/v1/users/{userId}/badges?limit=100
+        // but that's heavy. We'll approximate: if the user is "builderman" or has a verified badge.
+        // For demo, we'll use a real check: we'll fetch the user's badges and look for the Verified badge.
+        let isVerified = false;
+        try {
+          const badgeRes = await fetch(`https://badges.roblox.com/v1/users/${userId}/badges?limit=100&sortOrder=Asc`);
+          if (badgeRes.ok) {
+            const badgeData = await badgeRes.json();
+            if (badgeData.data) {
+              // Verified badge id is usually 2124667189 (Roblox Verified) but it can vary.
+              // We check by name "Verified" or "Verified" (case-insensitive)
+              isVerified = badgeData.data.some(b => b.name && b.name.toLowerCase().includes('verified'));
+            }
+          }
+        } catch (e) {
+          console.warn('Badge fetch skipped', e);
+        }
+
+        // if not verified via badge, we can also manually flag known verified users.
+        // as fallback: if username is 'builderman', mark as verified (for demo)
+        if (!isVerified && username.toLowerCase() === 'builderman') {
+          isVerified = true;
+        }
+
+        return {
+          id: userId,
+          username: profileData.name || username,
+          displayName: profileData.displayName || profileData.name || username,
+          avatarUrl: avatarUrl,
+          isVerified: isVerified,
+          raw: profileData,
+        };
+      } catch (error) {
+        console.error('Roblox API error:', error);
+        return null;
+      }
+    }
+
+    // update UI with user data
+    function updateProfileUI(userData) {
+      if (!userData) {
+        // fallback: show error / placeholder
+        displayNameSpan.textContent = '⚠️ error';
+        usernameText.textContent = '@failed to load';
+        avatarImg.style.display = 'none';
+        avatarPlaceholder.style.display = 'inline';
+        verifiedBadge.style.display = 'none';
+        unverifiedBadge.style.display = 'none';
+        statusText.textContent = 'offline';
+        liveStatus.textContent = 'error';
+        flagReasonSpan.textContent = 'API error — check console';
+        return;
+      }
+
+      // display name & username
+      displayNameSpan.textContent = userData.displayName || userData.username;
+      usernameText.textContent = `@${userData.username}`;
+
+      // avatar
+      if (userData.avatarUrl) {
+        avatarImg.src = userData.avatarUrl;
+        avatarImg.style.display = 'block';
+        avatarPlaceholder.style.display = 'none';
+      } else {
+        avatarImg.style.display = 'none';
+        avatarPlaceholder.style.display = 'inline';
+      }
+
+      // verified badge
+      if (userData.isVerified) {
+        verifiedBadge.style.display = 'inline-flex';
+        unverifiedBadge.style.display = 'none';
+      } else {
+        verifiedBadge.style.display = 'none';
+        unverifiedBadge.style.display = 'inline-flex';
+      }
+
+      // update status
+      statusText.textContent = 'active';
+      liveStatus.textContent = 'online';
+      flagReasonSpan.textContent = FLAG_REASON;
+
+      // update timestamp (simulate "checked 5h ago" but keep it fresh)
+      const now = new Date();
+      const hours = now.getHours().toString().padStart(2, '0');
+      const mins = now.getMinutes().toString().padStart(2, '0');
+      // we keep "5h ago" static as in image, but we can update the "checked" text
+      const timeTag = document.querySelector('.time-tag');
+      if (timeTag) {
+        // keep "added 5h ago · checked 5h ago" but update checked to now
+        // we will preserve the "added 5h ago" and update checked.
+        const addedPart = 'added 5h ago';
+        timeTag.innerHTML = `<i class="far fa-clock"></i> ${addedPart} · checked ${hours}:${mins}`;
+      }
+    }
+
+    // main load function
+    async function loadProfile(username) {
+      // show loading state
+      displayNameSpan.textContent = '...';
+      usernameText.textContent = '@loading...';
+      avatarImg.style.display = 'none';
+      avatarPlaceholder.style.display = 'inline';
+      verifiedBadge.style.display = 'none';
+      unverifiedBadge.style.display = 'none';
+      statusText.textContent = 'fetching';
+      liveStatus.textContent = 'loading';
+
+      const userData = await fetchRobloxUser(username);
+      updateProfileUI(userData);
+    }
+
+    // refresh button
+    document.getElementById('refreshBtn').addEventListener('click', function(e) {
+      e.preventDefault();
+      loadProfile(ROBLOX_USERNAME);
+    });
+
+    // initial load
+    loadProfile(ROBLOX_USERNAME);
+
+    // (optional) you can change the username by modifying the constant above.
+    // we also expose a way to change it via console for demo:
+    window.changeRobloxUser = function(newUsername) {
+      if (newUsername && newUsername.trim()) {
+        loadProfile(newUsername.trim());
+      }
+    };
+    console.log('💡 Tip: type changeRobloxUser("username") to switch profile');
+  })();
+</script>
+
+<!-- 
+  This UI is inspired by the provided image "xecret" style.
+  It fetches from Roblox API:
+    - avatar (headshot)
+    - display name & username
+    - verified badge (via badge check)
+  The "flagged" reason is static but you can easily replace it
+  with data from a flagged.txt file (hosted on GitHub).
+  Just fetch the raw text and parse usernames/reasons.
+-->
+</body>
+</html>

@@ -1,0 +1,9 @@
+[
+ {
+   "username":"ttkhoider",
+   "userid":"7311822640",
+   "reason":"Robux scam",
+   "reports":24,
+   "date":"2026-07-27"
+ }
+]
