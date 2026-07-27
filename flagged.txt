@@ -1,19 +1,4 @@
-# UserID|Reasons|Description|Evidence|Date|Status
+# USER_ID|CATEGORIES|SUMMARY|DATE_ADDED|STATUS
 
-7311822640|Scamming, Beam Method
-|Community reports indicate this user participated in multiple Robux scams.
-|https://imgur.com/example
-|2025-07-27
-|Flagged
-
-123456789|Harassment
-|Repeated harassment in multiple Roblox communities.
-|https://streamable.com/example
-|2025-07-26
-|Under Review
-
-987654321|Exploiting, Script Executor
-|Using exploits in public games.
-|https://youtube.com/watch?v=example
-|2025-07-25
-|Appealed
+7311822640|Scamming, Impersonation|Reported for impersonating community members and requesting Robux.|2026-07-27|Flagged
+987654321|Exploiting|Reported for using unauthorized scripts in public games.|2026-07-27|Under Review
