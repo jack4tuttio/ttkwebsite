@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Roblox profile · flag list</title>
-  <!-- Font Awesome for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   <style>
     * {
@@ -23,7 +22,6 @@
       padding: 2rem 1rem;
     }
 
-    /* main card – mimics the image style */
     .profile-card {
       background: #1a1f2b;
       max-width: 420px;
@@ -36,7 +34,6 @@
       color: #eef2f8;
     }
 
-    /* header with "xecret" and timestamp */
     .card-header {
       display: flex;
       justify-content: space-between;
@@ -75,7 +72,6 @@
       color: #6c8cff;
     }
 
-    /* avatar + main info */
     .profile-main {
       display: flex;
       align-items: center;
@@ -141,6 +137,7 @@
       margin-top: 4px;
       font-size: 0.95rem;
       color: #b0bedb;
+      flex-wrap: wrap;
     }
 
     .username-line i {
@@ -159,7 +156,6 @@
       align-items: center;
       gap: 4px;
       letter-spacing: 0.2px;
-      margin-left: 6px;
     }
 
     .verified-badge i {
@@ -178,10 +174,8 @@
       align-items: center;
       gap: 4px;
       letter-spacing: 0.2px;
-      margin-left: 6px;
     }
 
-    /* extra row – like "checked 5h ago" */
     .meta-row {
       display: flex;
       justify-content: space-between;
@@ -219,7 +213,6 @@
       color: #d6e2ff;
     }
 
-    /* tiny status */
     .status-chip {
       display: flex;
       align-items: center;
@@ -238,7 +231,6 @@
       display: inline-block;
     }
 
-    /* responsive */
     @media (max-width: 450px) {
       .profile-card {
         padding: 1.2rem;
@@ -250,13 +242,6 @@
         width: 64px;
         height: 64px;
       }
-    }
-
-    /* loading shimmer */
-    .loading {
-      opacity: 0.6;
-      filter: grayscale(0.3);
-      transition: 0.2s;
     }
 
     .btn-refresh {
@@ -275,7 +260,6 @@
       color: #d0defc;
     }
 
-    /* footer */
     .footer-note {
       text-align: center;
       font-size: 0.65rem;
@@ -289,21 +273,24 @@
     .footer-note i {
       margin: 0 4px;
     }
+
+    .error-message {
+      color: #ff6b6b;
+      font-size: 0.75rem;
+      margin-top: 4px;
+    }
   </style>
 </head>
 <body>
 
 <div class="profile-card" id="profileCard">
-  <!-- header -->
   <div class="card-header">
     <span class="xecret-badge"><i class="fas fa-shield-alt"></i> xecret</span>
-    <span class="time-tag"><i class="far fa-clock"></i> added 5h ago · checked 5h ago</span>
+    <span class="time-tag" id="timeTag"><i class="far fa-clock"></i> added 5h ago · checked 5h ago</span>
   </div>
 
-  <!-- main profile -->
   <div class="profile-main">
     <div class="avatar-wrapper" id="avatarWrapper">
-      <!-- avatar will be injected here -->
       <img id="avatarImg" src="" alt="avatar" style="display: none;" />
       <i class="fas fa-user-circle avatar-placeholder" id="avatarPlaceholder"></i>
     </div>
@@ -321,19 +308,16 @@
     </div>
   </div>
 
-  <!-- meta row : "checked 5h ago" style -->
   <div class="meta-row">
     <span><i class="far fa-eye"></i> profile fetched</span>
     <span><i class="far fa-check-circle"></i> <span id="statusText">active</span></span>
   </div>
 
-  <!-- flag note (custom reason) -->
   <div class="flag-note">
     <i class="fas fa-flag"></i>
     <span><strong>flagged</strong> · reason: <span id="flagReason">under review</span></span>
   </div>
 
-  <!-- mini status + refresh (demo) -->
   <div style="display: flex; justify-content: flex-end; margin-top: 12px; gap: 8px;">
     <div class="status-chip">
       <span class="status-dot"></span> <span id="liveStatus">online</span>
@@ -348,15 +332,10 @@
 
 <script>
   (function() {
-    // ----- configuration -----
-    // You can change this username to any Roblox user.
-    // For demo, we use a well-known account "builderman" (Roblox founder)
-    const ROBLOX_USERNAME = 'builderman';   // change to any username
-
-    // flag reason – you can edit this or fetch from a flagged.txt later
+    // Change this to any Roblox username you want to check
+    const ROBLOX_USERNAME = 'builderman';
     const FLAG_REASON = 'suspicious activity · reported 3x';
 
-    // DOM elements
     const avatarImg = document.getElementById('avatarImg');
     const avatarPlaceholder = document.getElementById('avatarPlaceholder');
     const displayNameSpan = document.getElementById('displayName');
@@ -366,69 +345,67 @@
     const flagReasonSpan = document.getElementById('flagReason');
     const statusText = document.getElementById('statusText');
     const liveStatus = document.getElementById('liveStatus');
+    const timeTag = document.getElementById('timeTag');
 
-    // helper: fetch Roblox user data by username
+    // FIXED: Using the correct Roblox API endpoints
     async function fetchRobloxUser(username) {
       try {
-        // 1. get user id from username
-        const userRes = await fetch(`https://api.roblox.com/users/get-by-username?username=${encodeURIComponent(username)}`);
-        if (!userRes.ok) {
-          throw new Error(`User not found (${userRes.status})`);
+        // Step 1: Get user ID from username using the search API
+        const searchRes = await fetch(`https://users.roblox.com/v1/users/search?keyword=${encodeURIComponent(username)}&limit=1`);
+        if (!searchRes.ok) {
+          throw new Error(`Search API error: ${searchRes.status}`);
         }
-        const userData = await userRes.json();
-        if (!userData || !userData.Id) {
-          throw new Error('Invalid user data');
+        const searchData = await searchRes.json();
+        
+        if (!searchData.data || searchData.data.length === 0) {
+          throw new Error(`User "${username}" not found`);
         }
 
-        const userId = userData.Id;
+        // Find exact match (case insensitive)
+        const user = searchData.data.find(u => u.name.toLowerCase() === username.toLowerCase());
+        if (!user) {
+          throw new Error(`User "${username}" not found (closest: ${searchData.data[0]?.name})`);
+        }
 
-        // 2. fetch more details: display name, verified status (from v1/users)
-        // we also get the username from this endpoint
+        const userId = user.id;
+
+        // Step 2: Get full user profile
         const profileRes = await fetch(`https://users.roblox.com/v1/users/${userId}`);
         if (!profileRes.ok) {
-          throw new Error(`Profile fetch failed (${profileRes.status})`);
+          throw new Error(`Profile fetch error: ${profileRes.status}`);
         }
         const profileData = await profileRes.json();
 
-        // 3. fetch avatar headshot (using thumbnails API)
-        // we request 420x420 thumbnail (headshot)
+        // Step 3: Get avatar headshot
         const thumbRes = await fetch(
           `https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userId}&size=420x420&format=Png&isCircular=false`
         );
-        if (!thumbRes.ok) {
-          throw new Error(`Thumbnail fetch failed (${thumbRes.status})`);
-        }
-        const thumbData = await thumbRes.json();
-
         let avatarUrl = null;
-        if (thumbData.data && thumbData.data.length > 0 && thumbData.data[0].imageUrl) {
-          avatarUrl = thumbData.data[0].imageUrl;
+        if (thumbRes.ok) {
+          const thumbData = await thumbRes.json();
+          if (thumbData.data && thumbData.data.length > 0 && thumbData.data[0].imageUrl) {
+            avatarUrl = thumbData.data[0].imageUrl;
+          }
         }
 
-        // 4. (optional) verified status from Roblox: we can check if user has "verified" badge
-        // Roblox API doesn't expose a simple "verified" boolean for all users.
-        // We'll use a heuristic: check if the user has the "Verified" badge (isVerified)
-        // We can fetch badges: https://badges.roblox.com/v1/users/{userId}/badges?limit=100
-        // but that's heavy. We'll approximate: if the user is "builderman" or has a verified badge.
-        // For demo, we'll use a real check: we'll fetch the user's badges and look for the Verified badge.
+        // Step 4: Check for verified badge
         let isVerified = false;
         try {
-          const badgeRes = await fetch(`https://badges.roblox.com/v1/users/${userId}/badges?limit=100&sortOrder=Asc`);
+          const badgeRes = await fetch(`https://badges.roblox.com/v1/users/${userId}/badges?limit=100`);
           if (badgeRes.ok) {
             const badgeData = await badgeRes.json();
             if (badgeData.data) {
-              // Verified badge id is usually 2124667189 (Roblox Verified) but it can vary.
-              // We check by name "Verified" or "Verified" (case-insensitive)
-              isVerified = badgeData.data.some(b => b.name && b.name.toLowerCase().includes('verified'));
+              isVerified = badgeData.data.some(b => 
+                b.name && b.name.toLowerCase().includes('verified')
+              );
             }
           }
         } catch (e) {
-          console.warn('Badge fetch skipped', e);
+          console.warn('Badge check failed:', e);
         }
 
-        // if not verified via badge, we can also manually flag known verified users.
-        // as fallback: if username is 'builderman', mark as verified (for demo)
-        if (!isVerified && username.toLowerCase() === 'builderman') {
+        // Fallback for known verified users
+        if (!isVerified && ['builderman', 'roblox'].includes(username.toLowerCase())) {
           isVerified = true;
         }
 
@@ -438,18 +415,16 @@
           displayName: profileData.displayName || profileData.name || username,
           avatarUrl: avatarUrl,
           isVerified: isVerified,
-          raw: profileData,
+          created: profileData.created,
         };
       } catch (error) {
         console.error('Roblox API error:', error);
-        return null;
+        return { error: error.message };
       }
     }
 
-    // update UI with user data
-    function updateProfileUI(userData) {
-      if (!userData) {
-        // fallback: show error / placeholder
+    function updateProfileUI(result) {
+      if (result && result.error) {
         displayNameSpan.textContent = '⚠️ error';
         usernameText.textContent = '@failed to load';
         avatarImg.style.display = 'none';
@@ -458,17 +433,21 @@
         unverifiedBadge.style.display = 'none';
         statusText.textContent = 'offline';
         liveStatus.textContent = 'error';
-        flagReasonSpan.textContent = 'API error — check console';
+        flagReasonSpan.textContent = result.error;
         return;
       }
 
-      // display name & username
-      displayNameSpan.textContent = userData.displayName || userData.username;
-      usernameText.textContent = `@${userData.username}`;
+      if (!result) {
+        displayNameSpan.textContent = '⚠️ error';
+        usernameText.textContent = '@no data';
+        return;
+      }
 
-      // avatar
-      if (userData.avatarUrl) {
-        avatarImg.src = userData.avatarUrl;
+      displayNameSpan.textContent = result.displayName || result.username;
+      usernameText.textContent = `@${result.username}`;
+
+      if (result.avatarUrl) {
+        avatarImg.src = result.avatarUrl;
         avatarImg.style.display = 'block';
         avatarPlaceholder.style.display = 'none';
       } else {
@@ -476,8 +455,7 @@
         avatarPlaceholder.style.display = 'inline';
       }
 
-      // verified badge
-      if (userData.isVerified) {
+      if (result.isVerified) {
         verifiedBadge.style.display = 'inline-flex';
         unverifiedBadge.style.display = 'none';
       } else {
@@ -485,28 +463,18 @@
         unverifiedBadge.style.display = 'inline-flex';
       }
 
-      // update status
       statusText.textContent = 'active';
       liveStatus.textContent = 'online';
       flagReasonSpan.textContent = FLAG_REASON;
 
-      // update timestamp (simulate "checked 5h ago" but keep it fresh)
+      // Update time
       const now = new Date();
       const hours = now.getHours().toString().padStart(2, '0');
       const mins = now.getMinutes().toString().padStart(2, '0');
-      // we keep "5h ago" static as in image, but we can update the "checked" text
-      const timeTag = document.querySelector('.time-tag');
-      if (timeTag) {
-        // keep "added 5h ago · checked 5h ago" but update checked to now
-        // we will preserve the "added 5h ago" and update checked.
-        const addedPart = 'added 5h ago';
-        timeTag.innerHTML = `<i class="far fa-clock"></i> ${addedPart} · checked ${hours}:${mins}`;
-      }
+      timeTag.innerHTML = `<i class="far fa-clock"></i> added 5h ago · checked ${hours}:${mins}`;
     }
 
-    // main load function
     async function loadProfile(username) {
-      // show loading state
       displayNameSpan.textContent = '...';
       usernameText.textContent = '@loading...';
       avatarImg.style.display = 'none';
@@ -516,39 +484,27 @@
       statusText.textContent = 'fetching';
       liveStatus.textContent = 'loading';
 
-      const userData = await fetchRobloxUser(username);
-      updateProfileUI(userData);
+      const result = await fetchRobloxUser(username);
+      updateProfileUI(result);
     }
 
-    // refresh button
     document.getElementById('refreshBtn').addEventListener('click', function(e) {
       e.preventDefault();
       loadProfile(ROBLOX_USERNAME);
     });
 
-    // initial load
+    // Initial load
     loadProfile(ROBLOX_USERNAME);
 
-    // (optional) you can change the username by modifying the constant above.
-    // we also expose a way to change it via console for demo:
+    // For testing different users via console
     window.changeRobloxUser = function(newUsername) {
       if (newUsername && newUsername.trim()) {
         loadProfile(newUsername.trim());
       }
     };
-    console.log('💡 Tip: type changeRobloxUser("username") to switch profile');
+    console.log('💡 Type: changeRobloxUser("username") to switch profiles');
+    console.log('💡 Current user:', ROBLOX_USERNAME);
   })();
 </script>
-
-<!-- 
-  This UI is inspired by the provided image "xecret" style.
-  It fetches from Roblox API:
-    - avatar (headshot)
-    - display name & username
-    - verified badge (via badge check)
-  The "flagged" reason is static but you can easily replace it
-  with data from a flagged.txt file (hosted on GitHub).
-  Just fetch the raw text and parse usernames/reasons.
--->
 </body>
 </html>
