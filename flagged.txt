@@ -1,0 +1,3 @@
+# USER_ID|CATEGORIES|SUMMARY|DATE_ADDED|STATUS
+# Replace the example IDs below with real numeric Roblox user IDs.
+261|Example Category|Example community-submitted report. Replace this text.|2026-07-27|Flagged
