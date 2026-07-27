@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Roblox profile · flag list</title>
+  <title>xecret · Roblox flagged users</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   <style>
     * {
@@ -30,7 +30,6 @@
       padding: 1.8rem 1.8rem 2rem;
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
       border: 1px solid #2f3748;
-      transition: 0.2s;
       color: #eef2f8;
     }
 
@@ -65,11 +64,6 @@
       display: flex;
       align-items: center;
       gap: 6px;
-    }
-
-    .time-tag i {
-      font-size: 0.7rem;
-      color: #6c8cff;
     }
 
     .profile-main {
@@ -127,7 +121,6 @@
       font-size: 0.7rem;
       font-weight: 400;
       color: #b8c7e5;
-      letter-spacing: 0.2px;
     }
 
     .username-line {
@@ -140,11 +133,6 @@
       flex-wrap: wrap;
     }
 
-    .username-line i {
-      color: #6f7fa0;
-      font-size: 0.9rem;
-    }
-
     .verified-badge {
       background: #2b87ff;
       color: white;
@@ -155,12 +143,6 @@
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      letter-spacing: 0.2px;
-    }
-
-    .verified-badge i {
-      font-size: 0.6rem;
-      color: white;
     }
 
     .unverified-badge {
@@ -173,7 +155,6 @@
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      letter-spacing: 0.2px;
     }
 
     .meta-row {
@@ -184,11 +165,6 @@
       padding: 0.5rem 0 0.2rem;
       border-top: 1px solid #282f40;
       margin-top: 0.25rem;
-    }
-
-    .meta-row i {
-      margin-right: 4px;
-      color: #5f71a0;
     }
 
     .flag-note {
@@ -231,19 +207,6 @@
       display: inline-block;
     }
 
-    @media (max-width: 450px) {
-      .profile-card {
-        padding: 1.2rem;
-      }
-      .display-name {
-        font-size: 1.2rem;
-      }
-      .avatar-wrapper {
-        width: 64px;
-        height: 64px;
-      }
-    }
-
     .btn-refresh {
       background: transparent;
       border: none;
@@ -265,19 +228,69 @@
       font-size: 0.65rem;
       color: #45506b;
       margin-top: 1.8rem;
-      letter-spacing: 0.3px;
       border-top: 1px solid #232b3d;
       padding-top: 1.2rem;
     }
 
-    .footer-note i {
-      margin: 0 4px;
+    .user-selector {
+      margin-top: 12px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .user-selector input {
+      flex: 1;
+      background: #1a1f2b;
+      border: 1px solid #2f3748;
+      color: #eef2f8;
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      outline: none;
+    }
+
+    .user-selector input::placeholder {
+      color: #5f6d86;
+    }
+
+    .user-selector button {
+      background: #2b87ff;
+      border: none;
+      color: white;
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .user-selector button:hover {
+      background: #1a6fd6;
     }
 
     .error-message {
       color: #ff6b6b;
       font-size: 0.75rem;
       margin-top: 4px;
+    }
+
+    @media (max-width: 450px) {
+      .profile-card {
+        padding: 1.2rem;
+      }
+      .display-name {
+        font-size: 1.2rem;
+      }
+      .avatar-wrapper {
+        width: 64px;
+        height: 64px;
+      }
+      .user-selector {
+        flex-wrap: wrap;
+      }
+      .user-selector input {
+        min-width: 120px;
+      }
     }
   </style>
 </head>
@@ -286,7 +299,7 @@
 <div class="profile-card" id="profileCard">
   <div class="card-header">
     <span class="xecret-badge"><i class="fas fa-shield-alt"></i> xecret</span>
-    <span class="time-tag" id="timeTag"><i class="far fa-clock"></i> added 5h ago · checked 5h ago</span>
+    <span class="time-tag" id="timeTag"><i class="far fa-clock"></i> loading...</span>
   </div>
 
   <div class="profile-main">
@@ -309,33 +322,53 @@
   </div>
 
   <div class="meta-row">
-    <span><i class="far fa-eye"></i> profile fetched</span>
-    <span><i class="far fa-check-circle"></i> <span id="statusText">active</span></span>
+    <span><i class="far fa-eye"></i> <span id="fetchStatus">fetching...</span></span>
+    <span><i class="far fa-check-circle"></i> <span id="statusText">—</span></span>
   </div>
 
   <div class="flag-note">
     <i class="fas fa-flag"></i>
-    <span><strong>flagged</strong> · reason: <span id="flagReason">under review</span></span>
+    <span><strong>flagged</strong> · reason: <span id="flagReason">loading...</span></span>
   </div>
 
   <div style="display: flex; justify-content: flex-end; margin-top: 12px; gap: 8px;">
     <div class="status-chip">
-      <span class="status-dot"></span> <span id="liveStatus">online</span>
+      <span class="status-dot" id="statusDot"></span> <span id="liveStatus">—</span>
     </div>
     <button class="btn-refresh" id="refreshBtn"><i class="fas fa-sync-alt"></i> refresh</button>
   </div>
 
+  <!-- User selector for testing -->
+  <div class="user-selector">
+    <input type="text" id="usernameInput" placeholder="Enter Roblox username" value="builderman" />
+    <button id="loadUserBtn">Load</button>
+  </div>
+
   <div class="footer-note">
-    <i class="fas fa-database"></i> data from Roblox API · <i class="fas fa-code-branch"></i> github flagged.txt
+    <i class="fas fa-database"></i> data from Roblox API · <i class="fas fa-code-branch"></i> <a href="#" id="githubLink" style="color: #6c8cff; text-decoration: none;">flagged.txt</a>
   </div>
 </div>
 
 <script>
   (function() {
-    // Change this to any Roblox username you want to check
-    const ROBLOX_USERNAME = 'builderman';
-    const FLAG_REASON = 'suspicious activity · reported 3x';
+    // ============================================================
+    // CONFIGURATION - Edit these to match your setup
+    // ============================================================
+    
+    // GitHub raw URL for your flagged.txt file
+    // Example: https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/flagged.txt
+    const FLAGGED_TXT_URL = 'https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/flagged.txt';
+    
+    // Fallback data if flagged.txt can't be loaded
+    const FALLBACK_FLAGGED = {
+      'builderman': 'suspicious activity · reported 3x',
+      'shedletsky': 'ban evasion · alt account',
+      '1x1x1x1': 'exploiting · mass report'
+    };
 
+    // ============================================================
+    // DOM Elements
+    // ============================================================
     const avatarImg = document.getElementById('avatarImg');
     const avatarPlaceholder = document.getElementById('avatarPlaceholder');
     const displayNameSpan = document.getElementById('displayName');
@@ -345,38 +378,100 @@
     const flagReasonSpan = document.getElementById('flagReason');
     const statusText = document.getElementById('statusText');
     const liveStatus = document.getElementById('liveStatus');
+    const statusDot = document.getElementById('statusDot');
+    const fetchStatus = document.getElementById('fetchStatus');
     const timeTag = document.getElementById('timeTag');
+    const usernameInput = document.getElementById('usernameInput');
+    const loadUserBtn = document.getElementById('loadUserBtn');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const githubLink = document.getElementById('githubLink');
 
-    // FIXED: Using the correct Roblox API endpoints
+    // Set GitHub link
+    githubLink.href = FLAGGED_TXT_URL;
+
+    // ============================================================
+    // State
+    // ============================================================
+    let flaggedData = {}; // username -> reason
+    let currentUsername = 'builderman';
+
+    // ============================================================
+    // Load flagged.txt from GitHub
+    // ============================================================
+    async function loadFlaggedTxt() {
+      try {
+        const response = await fetch(FLAGGED_TXT_URL);
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        const text = await response.text();
+        parseFlaggedTxt(text);
+        console.log('✅ Loaded flagged.txt from GitHub');
+      } catch (error) {
+        console.warn('⚠️ Could not load flagged.txt, using fallback:', error.message);
+        // Use fallback data
+        flaggedData = { ...FALLBACK_FLAGGED };
+        // Also try to load from localStorage cache
+        try {
+          const cached = localStorage.getItem('flaggedData');
+          if (cached) {
+            const parsed = JSON.parse(cached);
+            flaggedData = { ...flaggedData, ...parsed };
+            console.log('📦 Loaded cached flagged data');
+          }
+        } catch (e) {}
+      }
+    }
+
+    // Parse flagged.txt format:
+    // Each line: username,reason
+    // Example: builderman,suspicious activity
+    function parseFlaggedTxt(text) {
+      const lines = text.split('\n').filter(line => line.trim() && !line.startsWith('#'));
+      const newData = {};
+      for (const line of lines) {
+        const [username, ...reasonParts] = line.split(',').map(s => s.trim());
+        if (username) {
+          newData[username.toLowerCase()] = reasonParts.join(',') || 'flagged';
+        }
+      }
+      if (Object.keys(newData).length > 0) {
+        flaggedData = newData;
+        // Cache for offline use
+        try {
+          localStorage.setItem('flaggedData', JSON.stringify(flaggedData));
+        } catch (e) {}
+      }
+    }
+
+    // ============================================================
+    // Roblox API (FIXED - working endpoints)
+    // ============================================================
     async function fetchRobloxUser(username) {
       try {
-        // Step 1: Get user ID from username using the search API
-        const searchRes = await fetch(`https://users.roblox.com/v1/users/search?keyword=${encodeURIComponent(username)}&limit=1`);
-        if (!searchRes.ok) {
-          throw new Error(`Search API error: ${searchRes.status}`);
-        }
+        // Search for user
+        const searchRes = await fetch(`https://users.roblox.com/v1/users/search?keyword=${encodeURIComponent(username)}&limit=5`);
+        if (!searchRes.ok) throw new Error(`Search API error: ${searchRes.status}`);
         const searchData = await searchRes.json();
         
         if (!searchData.data || searchData.data.length === 0) {
           throw new Error(`User "${username}" not found`);
         }
 
-        // Find exact match (case insensitive)
+        // Find exact match
         const user = searchData.data.find(u => u.name.toLowerCase() === username.toLowerCase());
         if (!user) {
-          throw new Error(`User "${username}" not found (closest: ${searchData.data[0]?.name})`);
+          throw new Error(`User "${username}" not found. Did you mean "${searchData.data[0].name}"?`);
         }
 
         const userId = user.id;
 
-        // Step 2: Get full user profile
+        // Get profile
         const profileRes = await fetch(`https://users.roblox.com/v1/users/${userId}`);
-        if (!profileRes.ok) {
-          throw new Error(`Profile fetch error: ${profileRes.status}`);
-        }
+        if (!profileRes.ok) throw new Error(`Profile error: ${profileRes.status}`);
         const profileData = await profileRes.json();
 
-        // Step 3: Get avatar headshot
+        // Get avatar
         const thumbRes = await fetch(
           `https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userId}&size=420x420&format=Png&isCircular=false`
         );
@@ -388,7 +483,7 @@
           }
         }
 
-        // Step 4: Check for verified badge
+        // Check verified badge
         let isVerified = false;
         try {
           const badgeRes = await fetch(`https://badges.roblox.com/v1/users/${userId}/badges?limit=100`);
@@ -400,14 +495,7 @@
               );
             }
           }
-        } catch (e) {
-          console.warn('Badge check failed:', e);
-        }
-
-        // Fallback for known verified users
-        if (!isVerified && ['builderman', 'roblox'].includes(username.toLowerCase())) {
-          isVerified = true;
-        }
+        } catch (e) {}
 
         return {
           id: userId,
@@ -415,7 +503,6 @@
           displayName: profileData.displayName || profileData.name || username,
           avatarUrl: avatarUrl,
           isVerified: isVerified,
-          created: profileData.created,
         };
       } catch (error) {
         console.error('Roblox API error:', error);
@@ -423,29 +510,38 @@
       }
     }
 
-    function updateProfileUI(result) {
+    // ============================================================
+    // Update UI
+    // ============================================================
+    function updateProfileUI(result, username) {
+      const lowerUsername = username.toLowerCase();
+      const flagReason = flaggedData[lowerUsername] || 'not flagged';
+
       if (result && result.error) {
         displayNameSpan.textContent = '⚠️ error';
-        usernameText.textContent = '@failed to load';
+        usernameText.textContent = `@${username}`;
         avatarImg.style.display = 'none';
         avatarPlaceholder.style.display = 'inline';
         verifiedBadge.style.display = 'none';
         unverifiedBadge.style.display = 'none';
-        statusText.textContent = 'offline';
-        liveStatus.textContent = 'error';
-        flagReasonSpan.textContent = result.error;
+        statusText.textContent = 'error';
+        liveStatus.textContent = 'offline';
+        statusDot.style.background = '#ff6b6b';
+        fetchStatus.textContent = 'failed';
+        flagReasonSpan.textContent = `⚠️ ${result.error}`;
         return;
       }
 
       if (!result) {
-        displayNameSpan.textContent = '⚠️ error';
-        usernameText.textContent = '@no data';
+        displayNameSpan.textContent = '⚠️ no data';
         return;
       }
 
+      // Display name & username
       displayNameSpan.textContent = result.displayName || result.username;
       usernameText.textContent = `@${result.username}`;
 
+      // Avatar
       if (result.avatarUrl) {
         avatarImg.src = result.avatarUrl;
         avatarImg.style.display = 'block';
@@ -455,6 +551,7 @@
         avatarPlaceholder.style.display = 'inline';
       }
 
+      // Verified badge
       if (result.isVerified) {
         verifiedBadge.style.display = 'inline-flex';
         unverifiedBadge.style.display = 'none';
@@ -463,9 +560,14 @@
         unverifiedBadge.style.display = 'inline-flex';
       }
 
+      // Status
       statusText.textContent = 'active';
       liveStatus.textContent = 'online';
-      flagReasonSpan.textContent = FLAG_REASON;
+      statusDot.style.background = '#3bc46e';
+      fetchStatus.textContent = 'loaded';
+
+      // Flag reason
+      flagReasonSpan.textContent = flagReason;
 
       // Update time
       const now = new Date();
@@ -474,36 +576,70 @@
       timeTag.innerHTML = `<i class="far fa-clock"></i> added 5h ago · checked ${hours}:${mins}`;
     }
 
+    // ============================================================
+    // Main load function
+    // ============================================================
     async function loadProfile(username) {
+      if (!username || !username.trim()) {
+        username = 'builderman';
+      }
+      username = username.trim();
+      currentUsername = username;
+      usernameInput.value = username;
+
+      // Show loading
       displayNameSpan.textContent = '...';
-      usernameText.textContent = '@loading...';
+      usernameText.textContent = `@${username}`;
       avatarImg.style.display = 'none';
       avatarPlaceholder.style.display = 'inline';
       verifiedBadge.style.display = 'none';
       unverifiedBadge.style.display = 'none';
-      statusText.textContent = 'fetching';
+      statusText.textContent = 'loading';
       liveStatus.textContent = 'loading';
+      statusDot.style.background = '#f7c948';
+      fetchStatus.textContent = 'fetching...';
+      flagReasonSpan.textContent = 'loading...';
 
       const result = await fetchRobloxUser(username);
-      updateProfileUI(result);
+      updateProfileUI(result, username);
     }
 
-    document.getElementById('refreshBtn').addEventListener('click', function(e) {
-      e.preventDefault();
-      loadProfile(ROBLOX_USERNAME);
+    // ============================================================
+    // Initialize
+    // ============================================================
+    async function init() {
+      await loadFlaggedTxt();
+      loadProfile('builderman');
+    }
+
+    // ============================================================
+    // Event listeners
+    // ============================================================
+    refreshBtn.addEventListener('click', () => loadProfile(currentUsername));
+    
+    loadUserBtn.addEventListener('click', () => {
+      const val = usernameInput.value.trim();
+      if (val) loadProfile(val);
     });
 
-    // Initial load
-    loadProfile(ROBLOX_USERNAME);
-
-    // For testing different users via console
-    window.changeRobloxUser = function(newUsername) {
-      if (newUsername && newUsername.trim()) {
-        loadProfile(newUsername.trim());
+    usernameInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const val = usernameInput.value.trim();
+        if (val) loadProfile(val);
       }
-    };
-    console.log('💡 Type: changeRobloxUser("username") to switch profiles');
-    console.log('💡 Current user:', ROBLOX_USERNAME);
+    });
+
+    // ============================================================
+    // Start
+    // ============================================================
+    init();
+
+    // Expose for console testing
+    window.loadProfile = loadProfile;
+    window.flaggedData = () => flaggedData;
+    console.log('💡 Usage: loadProfile("username")');
+    console.log('💡 Current flagged users:', Object.keys(flaggedData).join(', '));
+
   })();
 </script>
 </body>
