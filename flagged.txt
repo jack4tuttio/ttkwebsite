@@ -1,4 +1,0 @@
-# USER_ID|CATEGORIES|SUMMARY|DATE_ADDED|STATUS
-
-7311822640|Scamming, Impersonation|Reported for impersonating community members and requesting Robux.|2026-07-27|Flagged
-987654321|Exploiting|Reported for using unauthorized scripts in public games.|2026-07-27|Under Review
