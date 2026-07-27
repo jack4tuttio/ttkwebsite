@@ -1,8 +1,1 @@
-# FORMAT:
-# ROBLOX_USER_ID | CATEGORIES (comma separated) | SUMMARY | EVIDENCE URLS (comma separated) | DATE ADDED | STATUS
-# Use Roblox numeric user IDs so username changes do not break listings.
-# Replace these demo entries with real, carefully reviewed reports.
-
-1 | Impersonation, Suspicious links | Demo listing only. This account is included to show the layout and is not a real accusation. | https://example.com/evidence | 2026-07-27 | Demo
-261 | Scamming | Demo listing only. Add a concise, neutral summary supported by evidence. | https://example.com/report-1, https://example.com/report-2 | 2026-07-27 | Under review
-156 | Exploiting | Demo listing only. Avoid publishing private information or unsupported claims. | https://example.com/evidence | 2026-07-27 | Disputed
+7311822640 | Scamming, Exploiting | Description of the report | https://evidence-link.com | 2026-07-27 | Under review
